@@ -2,7 +2,6 @@
 - npm i
 - create "./mdtGoogleApiCreds.json" file
 - node readWarImage.js
-- test
 
 ### TODO
 - remove hard coded credentials
