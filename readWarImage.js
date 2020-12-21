@@ -1,24 +1,31 @@
 import vision from '@google-cloud/vision'
 import fs from "fs"
+import Jimp from "./jimp.js"
 const creds = fs.readFileSync("./mdtGoogleApiCreds.json")
 
 
 const projectId = JSON.parse(creds).project_id
 const keyFilename = "./mdtGoogleApiCreds.json"
 
-// Creates a client
+// Creates a client and initializes jimp class
 const client = new vision.ImageAnnotatorClient({projectId, keyFilename})
 
-const warFileNames = ["./warNames.png", "./warAttackPoints.png"]
+const jimp = new Jimp()
+
+// const warFileNames = ["warNames.png", "warAttackPoints.png"]
 
 // Performs text detection on the local file
 
 async function getTextWar(){
 
+    let warFileNames = await jimp.createAll()
+
+    console.log(warFileNames)
+
     let responseData = {}
 
     for (const fileName of warFileNames){
-        const [result] = await client.textDetection(fileName)
+        const [result] = await client.textDetection(fileName + ".png")
         const detections = result.textAnnotations
         let descArray = []
         responseData[fileName] = descArray
@@ -28,76 +35,40 @@ async function getTextWar(){
         })
     }
     for (const arr in responseData){
-        responseData[arr].shift()
+        console.log(arr, responseData[arr].length)
     }
     fs.writeFileSync("rawData.json", JSON.stringify(responseData))
     return responseData
-    // descArray.map(x => x.shift())
-    // fs.writeFileSync("./rawDataText.txt", JSON.stringify(descArray))
-    // return descArray
 }
 
 let res = await getTextWar()
 console.log(res)
 
-
-async function writeFileWar(name){
-    // initiates the data array for username and damage to be added later
-    let data = []
-
-    // calls the google api
+async function createNames(name){
+    // calls the Google Vision api
     let text = await getTextWar()
 
-    // creates a cleaned array out of the alliance name
-    if (name.includes(" ")){
-        name = name.split(" ")
-        name = name.map(x => x.replace(/\W/g, ""))
-    }
-    if (Array.isArray(name) === false){
-        name = [name]
-    }
+    // the first index of the response from the Google Vision api is a batch string of all text 
+    text = text.warNames.shift()
+
+    // removes all special characters from the response
+    text = text.replace(/\W/g, "")
     
-    // removes special characters from the data
-    text = text.map(x => x.replace(/\W/gi, ""))
+    // removes the special characters from the alliance name then regexes them out
+    // the /O-/ part is because the api sometimes returns Os in between the usernames and the alliance name
+    name = name.replace(/\W/g, "")
+    console.log(name)
+    let alliance = new RegExp(name, "g")
+    text = text.replace(alliance, "-").replace(/O-/g, "-")
 
-    for (let i = text.length - 1; i >= 0; i--){
-        
-        // removes extraneous characters
-        if (text[i].length <= 1 || text[i] === "ME"){
-            text.splice(i, 1)
-        }
+    // splitting the names into an array for later use for matching with other data
+    text = text.split("-")
+    console.log(text)
+}
 
-        // removes the alliance name from the screenshot
-        name.forEach((word)=>{
-            if (text[i] === word){
-                text.splice(i, 1)
-            }
-        })
-    }
+//createNames("Allspark X-Force")
 
-    // name.forEach((word)=>{
-    //     let regex = new RegExp(word, "g")
-    //     text = text.map(x => x.replace(regex))
-    // })
-
-    // fixes names with spaces in them
-
-    let regAbc = new RegExp(/[a-zA-Z]/, "")
-    let filtered = {}
-    
-    text = text.map((elem, index) => {
-        if (regAbc.test(elem.charAt(0)) && text[index+1] !== undefined && regAbc.test(text[index+1].charAt(0))){
-            filtered[index+1] = ''
-            return `${elem}${text[index+1]}`
-        } else if (text[index+1] === undefined) {
-            return
-        }
-        return elem
-    }).filter((elem,idx) => {
-         if(typeof filtered[idx] === "undefined"){
-                return elem
-          }   
-    })
+/*
 
     // combines the username with the damage numbers and uppercases the first letters for sorting
     text.forEach((elem, index)=>{
@@ -131,3 +102,5 @@ async function writeFileWar(name){
 }
 
 //writeFileWar("Allspark X-Force")
+
+*/
