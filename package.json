@@ -6,9 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/vision": "^2.1.2"
+    "@google-cloud/vision": "^2.1.2",
+    "canvas": "^2.6.1",
+    "image-clipper": "^0.4.4",
+    "jimp": "^0.16.1"
   }
 }

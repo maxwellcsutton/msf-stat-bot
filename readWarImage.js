@@ -1,6 +1,5 @@
-const vision = require('@google-cloud/vision');
-const fs = require("fs")
-const fsPromises = fs.promises
+import vision from '@google-cloud/vision'
+import fs from "fs"
 const creds = fs.readFileSync("./mdtGoogleApiCreds.json")
 
 
@@ -8,25 +7,39 @@ const projectId = JSON.parse(creds).project_id
 const keyFilename = "./mdtGoogleApiCreds.json"
 
 // Creates a client
-const client = new vision.ImageAnnotatorClient({projectId, keyFilename});
+const client = new vision.ImageAnnotatorClient({projectId, keyFilename})
 
-const warFileName = "./image1.png";
+const warFileNames = ["./warNames.png", "./warAttackPoints.png"]
 
 // Performs text detection on the local file
 
 async function getTextWar(){
-    const [result] = await client.textDetection(warFileName);
-    const detections = result.textAnnotations;
-    let descArray = []
-    detections.forEach((e)=>{
+
+    let responseData = {}
+
+    for (const fileName of warFileNames){
+        const [result] = await client.textDetection(fileName)
+        const detections = result.textAnnotations
+        let descArray = []
+        responseData[fileName] = descArray
+        detections.forEach((e)=>{
         let data = e.description
         descArray.push(data)
-        
-    })
-    fsPromises.writeFile("./rawDataText.txt", descArray)
-    descArray.shift()
-    return descArray
+        })
+    }
+    for (const arr in responseData){
+        responseData[arr].shift()
+    }
+    fs.writeFileSync("rawData.json", JSON.stringify(responseData))
+    return responseData
+    // descArray.map(x => x.shift())
+    // fs.writeFileSync("./rawDataText.txt", JSON.stringify(descArray))
+    // return descArray
 }
+
+let res = await getTextWar()
+console.log(res)
+
 
 async function writeFileWar(name){
     // initiates the data array for username and damage to be added later
@@ -73,15 +86,17 @@ async function writeFileWar(name){
     let filtered = {}
     
     text = text.map((elem, index) => {
-        if (regAbc.test(elem.charAt(0)) && regAbc.test(text[index+1].charAt(0))){
+        if (regAbc.test(elem.charAt(0)) && text[index+1] !== undefined && regAbc.test(text[index+1].charAt(0))){
             filtered[index+1] = ''
             return `${elem}${text[index+1]}`
+        } else if (text[index+1] === undefined) {
+            return
         }
         return elem
     }).filter((elem,idx) => {
          if(typeof filtered[idx] === "undefined"){
                 return elem
-          }
+          }   
     })
 
     // combines the username with the damage numbers and uppercases the first letters for sorting
@@ -107,7 +122,7 @@ async function writeFileWar(name){
 
     // prints the data to csv
     try {
-        fsPromises.writeFile("./outputWarText.csv", data)
+        fs.writeFileSync("./outputWarText.csv", data)
         console.log("**War CSV Updated**")
     } catch (error) {
         console.log(error)
@@ -115,4 +130,4 @@ async function writeFileWar(name){
      
 }
 
-writeFileWar("Allspark X-Force") // add ss type as a param
+//writeFileWar("Allspark X-Force")
