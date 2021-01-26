@@ -18,12 +18,14 @@ const jimp = new Jimp()
 
 async function getTextWar(){
 
+    // gets the cleaned images from the jimp.js file
     let warFileNames = await jimp.createAll()
 
     console.log(warFileNames)
 
     let responseData = {}
 
+    // creates an array of data for each file created in jimp.js file
     for (const fileName of warFileNames){
         const [result] = await client.textDetection(fileName + ".png")
         const detections = result.textAnnotations
@@ -41,8 +43,8 @@ async function getTextWar(){
     return responseData
 }
 
-let res = await getTextWar()
-console.log(res)
+// let res = await getTextWar()
+// console.log(res)
 
 async function createNames(name){
     // calls the Google Vision api
@@ -63,10 +65,10 @@ async function createNames(name){
 
     // splitting the names into an array for later use for matching with other data
     text = text.split("-")
-    console.log(text)
+    console.log(text, text.length)
 }
 
-//createNames("Allspark X-Force")
+createNames("Allspark X-Force")
 
 /*
 
