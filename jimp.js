@@ -3,140 +3,151 @@ import jimp from "jimp"
 export default class {
 
     /*
-    This file takes the input (image1.png) and outputs split and resized images from each column to make it easier
+    This file takes the input (image.png) and outputs split and resized images from each column to make it easier
     for the Vision API to parse the numbers consistently.  This is done because the input images will not be a consistent
     size, so they need to be cleaned in order to be passed properly into the Vision API.
     */
-    
+
 
     files = []
 
     // for testing purposes only
-    async getTestImage(){
+    async getTestImage() {
         try {
-            const image = await jimp.read("image1.png")
+            const image = await jimp.read("image.png")
             await image.resize(1080, 1920)
             await image.write("test.png")
             console.log("test image written")
-        } catch (err){
-            console.log(err)
-        }
-    }
-  
-    async getWarNames(){
-        try {
-            const image = await jimp.read("image1.png")
-            await image.resize(1080, 1920)
-            await image.crop(154, 119, 237, 1657)
-            await image.write("warNames.png")
-            this.files.push("warNames")
-            console.log("warNames written")
-        } catch (err){
+        } catch (err) {
             console.log(err)
         }
     }
 
-    async getAttackPoints(){
+    async getWarNames() {
         try {
-            const image = await jimp.read("image1.png")
+            const image = await jimp.read("image.png")
+            let symbolCensor = new jimp(31, 27, "black", (err, censor) => {
+                if (err) throw err;
+            });
+            await image.resize(1080, 1920)
+            await image.crop(154, 119, 282, 1657)
+                // censors the pfp and alliance name so only player names are exposed to the API
+                // for some reason, the # of px between names isnt consistent so the array has to be hardcoded
+            let digitPxArr = [34]
+            let additionalIndexes = 23
+            for (let i = 0; i <= additionalIndexes; i++) {
+                digitPxArr.push(digitPxArr[i] + 69.25)
+                await image.composite(symbolCensor, 69, digitPxArr[i])
+            }
+            await image.write("warNames.png")
+            this.files.push("warNames.png")
+            console.log("warNames written")
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    async getAttackPoints() {
+        try {
+            const image = await jimp.read("image.png")
             await image.resize(1080, 1920)
             await image.crop(440, 119, 104, 1657)
             await image.write("warAttackPoints.png")
-            this.files.push("warAttackPoints")
+            this.files.push("warAttackPoints.png")
             console.log("warAttackPoints written")
-        } catch (err){
+        } catch (err) {
             console.log(err)
         }
     }
 
-    async getAttacks(){
+    async getAttacks() {
         try {
-            const image = await jimp.read("image1.png")
+            const image = await jimp.read("image.png")
             await image.resize(1080, 1920)
             await image.crop(587, 119, 50, 1657)
-            // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
-            // starts at 25, every 69 px after
+                // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
+                // starts at 25, every 69 px after
             const font = await jimp.loadFont(jimp.FONT_SANS_16_WHITE)
             let digitPxArr = [25]
             let additionalIndexes = 23
-            for (let i = 0; i <= additionalIndexes; i++){
+            for (let i = 0; i <= additionalIndexes; i++) {
                 digitPxArr.push(digitPxArr[i] + 69)
                 await image.print(font, 4, digitPxArr[i], "#")
             }
             await image.write("warAttacks.png")
-            this.files.push("warAttacks")
+            this.files.push("warAttacks.png")
             console.log("warAttacks written")
-        } catch (err){
+        } catch (err) {
             console.log(err)
         }
     }
 
-    async getDamage(){
+    async getDamage() {
         try {
-            const image = await jimp.read("image1.png")
+            const image = await jimp.read("image.png")
             await image.resize(1080, 1920)
             await image.crop(676, 119, 104, 1657)
             await image.write("warDamage.png")
-            this.files.push("warDamage")
+            this.files.push("warDamage.png")
             console.log("warDamage written")
-        } catch (err){
+        } catch (err) {
             console.log(err)
         }
     }
 
-    async getDefensiveWins(){
+    async getDefensiveWins() {
         try {
-            const image = await jimp.read("image1.png")
+            const image = await jimp.read("image.png")
             await image.resize(1080, 1920)
             await image.crop(830, 119, 50, 1657)
-            // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
-            // starts at 25, every 69 px after
+                // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
+                // starts at 25, every 69 px after
             const font = await jimp.loadFont(jimp.FONT_SANS_16_WHITE)
             let digitPxArr = [25]
             let additionalIndexes = 23
-            for (let i = 0; i <= additionalIndexes; i++){
+            for (let i = 0; i <= additionalIndexes; i++) {
                 digitPxArr.push(digitPxArr[i] + 69)
                 await image.print(font, 4, digitPxArr[i], "#")
             }
             await image.write("warDefensiveWins.png")
-            this.files.push("warDefensiveWins")
+            this.files.push("warDefensiveWins.png")
             console.log("warDefensiveWins written")
-        } catch (err){
+        } catch (err) {
             console.log(err)
         }
     }
 
-    async getDefensiveBoosts(){
+    async getDefensiveBoosts() {
         try {
-            const image = await jimp.read("image1.png")
+            const image = await jimp.read("image.png")
             await image.resize(1080, 1920)
             await image.crop(940, 119, 50, 1657)
-            // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
-            // starts at 25, every 69 px after
+                // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
+                // starts at 25, every 69 px after
             const font = await jimp.loadFont(jimp.FONT_SANS_16_WHITE)
             let digitPxArr = [25]
             let additionalIndexes = 23
-            for (let i = 0; i <= additionalIndexes; i++){
+            for (let i = 0; i <= additionalIndexes; i++) {
                 digitPxArr.push(digitPxArr[i] + 69)
                 await image.print(font, 4, digitPxArr[i], "#")
             }
             await image.write("warDefensiveBoosts.png")
-            this.files.push("warDefensiveBoosts")
+            this.files.push("warDefensiveBoosts.png")
             console.log("warDefensiveBoosts written")
-        } catch (err){
+        } catch (err) {
             console.log(err)
         }
     }
 
-    async getNumber(){
+    async getNumber() {
         try {
-            const image = await jimp.read("image1.png")
+            const image = await jimp.read("image.png")
             await image.resize(1080, 1920)
             await image.crop(441, 119, 574, 1657)
             await image.write("numbers.png")
-            this.files.push("numbers")
+            this.files.push("numbers.png")
             console.log("numbers written")
-        } catch (err){
+        } catch (err) {
             console.log(err)
         }
     }
@@ -148,8 +159,8 @@ export default class {
         await this.getDamage()
         await this.getDefensiveWins()
         await this.getDefensiveBoosts()
-        // await this.getNumber()
-        return this.files    
+            // await this.getNumber()
+        return this.files
     }
 
 }
