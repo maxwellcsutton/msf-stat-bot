@@ -32,3 +32,5 @@ For readme:
 - For mistakes that are consistent by the OCR, I've added some regex to make replacements.  The list is included below:
     - "%" to "2"
     - "끄" to "11"
+    - "扣" to "0"
+    - "口" to "0"

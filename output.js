@@ -34,7 +34,12 @@ export default class {
         // cleans the added # from the damage numbers
         for (let [key, value] of Object.entries(text)) {
             value.shift()
-            value = value.map(x => x.replace(/#/g, "").replace(/,/g, "").replace(/끄/g, "11").replace(/%/g, "2"))
+            value = value.map(x => x.replace(/#/g, "")
+                .replace(/,/g, "")
+                .replace(/끄/g, "11")
+                .replace(/%/g, "2")
+                .replace(/扣/g, "0")
+                .replace(/口/g, ""))
             value = value.filter(Boolean)
             dataSet[key] = value
         }
