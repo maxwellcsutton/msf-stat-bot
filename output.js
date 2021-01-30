@@ -1,15 +1,15 @@
-import Vision from "./googleVision.js"
+import Gv from "./googleVision.js"
 import fs from "fs"
 
 export default class {
 
-    vision = new Vision()
+    gv = new Gv()
 
     // Creates the dataSet object from the response of the Vision API call
 
     async createDataSet() {
         // calls the Google Vision api
-        let text = await this.vision.getTextWar()
+        let text = await this.gv.getTextWar()
 
         // the first index of the response from the Google Vision api is a batch string of all text 
         let playerNames = text.warNames.shift()

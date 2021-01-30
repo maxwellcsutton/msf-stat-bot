@@ -1,11 +1,11 @@
 import Jimp from "./jimp.js"
-import Vision from "./googleVision.js"
-import Storage from "./googleStorage.js"
+import Gv from "./googleVision.js"
+import Gcs from "./googleStorage.js"
 import Output from "./output.js"
 
 const jimp = new Jimp()
-const vision = new Vision()
-const storage = new Storage()
+const gv = new Gv()
+const gcs = new Gcs()
 const output = new Output()
 
 async function test() {

@@ -1,7 +1,7 @@
 import vision from "@google-cloud/vision"
 import fs from "fs"
 import Jimp from "./jimp.js"
-import Storage from "./googleStorage.js"
+import Gcs from "./googleStorage.js"
 
 export default class {
 
@@ -15,9 +15,9 @@ export default class {
         // Creates a client and initializes google storage class
         let client = new vision.ImageAnnotatorClient({ projectId, keyFilename })
 
-        let storage = new Storage()
+        let gcs = new Gcs()
 
-        let warFileUrls = await storage.uploadWarFiles()
+        let warFileUrls = await gcs.uploadWarFiles()
 
         // Sets the type of annotation you want to perform on the image
         const features = [{ type: "TEXT_DETECTION" }];

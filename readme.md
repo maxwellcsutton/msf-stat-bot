@@ -1,7 +1,14 @@
 ### TO USE
-- npm i
+- `npm i`
 - create "./mdtGoogleApiCreds.json" file
-- node readWarImage.js
+- add a portrait mode war screenshot to the folder titled "image" with format .png
+- node test.js
+
+
+## STEPS TO USE UNTIL I MAKE IT PUBLICLY ACCESSIBLE 
+- create a google platform project scoped to vision api and gcs
+- create a public bucket named `war-screenshots`
+- download the auth json and name it mdtGoogleApiCreds.json and put it in the folder
 
 ### TODO
 Primary goals:
