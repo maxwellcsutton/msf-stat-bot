@@ -19,17 +19,21 @@ export default class {
         // Adds a unix timestamp to the file name in case multiple people use the function at the same time
         let file = Date.now() + fileName
 
-        await storage.bucket(bucketName).upload("./" + fileName, {
-            gzip: true,
-            destination: file,
-            metadata: {
-                cacheControl: "no-cache",
-            },
-        });
-
-        // Uploads a local file to the bucket
-        console.log(`${file} uploaded to ${bucketName}.`);
-        return file
+        try {
+            // Uploads a local file to the bucket
+            await storage.bucket(bucketName).upload("./" + fileName, {
+                gzip: true,
+                destination: file,
+                metadata: {
+                    cacheControl: "no-cache",
+                },
+            });
+            let url = `https://storage.googleapis.com/${bucketName}/${file}`
+            console.log(url)
+            return url
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     async uploadWarFiles() {
@@ -45,8 +49,8 @@ export default class {
 
         // Loops through the image names provided by Jimp and passes them into the uploadFile function
         for (let i = 0; i < fileNamesArray.length; i++) {
-            let file = await this.uploadFile(bucketName, fileNamesArray[i])
-            warImgUrls.push(`https://storage.googleapis.com/${bucketName}/${file}`)
+            let url = await this.uploadFile(bucketName, fileNamesArray[i])
+            warImgUrls.push(url)
         }
 
         return warImgUrls

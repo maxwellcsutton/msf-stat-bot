@@ -14,10 +14,15 @@
 Primary goals:
 - fix edge cases
 
+Discord bot implementation:
+    1. make bot read the image
+    2. upload the image to gcs
+    3. download the image
+    4. pass the image into the jimp function
+
 Nice to haves:
 - figure out better way of handling randomly added characters
 - figure out how to deal with dumb usernames
-- create a discord bot
 
 For readme:
 - add images as examples

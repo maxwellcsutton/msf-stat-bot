@@ -25,7 +25,6 @@ export default class {
         // Constructs the image requests to be passed into the batchAnnotate method
         let imageRequestsArr = []
         warFileUrls.forEach((elem) => {
-            console.log(elem)
             let reqObj = {
                 image: {
                     source: {
@@ -46,29 +45,33 @@ export default class {
         };
 
         // Calls batchAnnotate method on the requests constructed above
-        const [result] = await client.batchAnnotateImages(request);
-        let data = result.responses
+        try {
+            const [result] = await client.batchAnnotateImages(request);
+            let data = result.responses
 
-        // Creates an array of the data that is returned from batchAnnotate method
-        let warTextArr = []
-        data.forEach((elem) => {
-            let textAnnotations = elem.textAnnotations
-            let descriptionArray = []
-            textAnnotations.forEach((e) => {
-                descriptionArray.push(e.description)
+            // Creates an array of the data that is returned from batchAnnotate method
+            let warTextArr = []
+            data.forEach((elem) => {
+                let textAnnotations = elem.textAnnotations
+                let descriptionArray = []
+                textAnnotations.forEach((e) => {
+                    descriptionArray.push(e.description)
+                })
+                warTextArr.push(descriptionArray)
             })
-            warTextArr.push(descriptionArray)
-        })
 
-        // This relies on the API calls returning in the correct order, if I make any changes to the image function orders, this will need to be refactored
-        let warTextObj = {
-            warNames: warTextArr[0],
-            warAttackPoints: warTextArr[1],
-            warAttacks: warTextArr[2],
-            warDamage: warTextArr[3],
-            warDefensiveWins: warTextArr[4],
-            warDefensiveBoosts: warTextArr[5]
+            // This relies on the API calls returning in the correct order, if I make any changes to the image function orders, this will need to be refactored
+            let warTextObj = {
+                warNames: warTextArr[0],
+                warAttackPoints: warTextArr[1],
+                warAttacks: warTextArr[2],
+                warDamage: warTextArr[3],
+                warDefensiveWins: warTextArr[4],
+                warDefensiveBoosts: warTextArr[5]
+            }
+            return warTextObj
+        } catch (err) {
+            console.log(err)
         }
-        return warTextObj
     }
 }

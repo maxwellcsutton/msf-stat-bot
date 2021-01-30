@@ -1,9 +1,11 @@
 import Gv from "./googleVision.js"
+import Gcs from "./googleStorage.js"
 import fs from "fs"
 
 export default class {
 
     gv = new Gv()
+    gcs = new Gcs()
 
     // Creates the dataSet object from the response of the Vision API call
 
@@ -21,7 +23,6 @@ export default class {
         // splitting the names into an array for later use for matching with other data
         playerNames = playerNames.split("-")
         playerNames = playerNames.filter(Boolean)
-        console.log(playerNames)
 
         playerNames.forEach((elem, index) => {
             playerNames[index] = elem[0].toUpperCase() + elem.slice(1)
@@ -66,12 +67,13 @@ export default class {
         // prints the data to csv
         try {
             fs.writeFileSync("./outputWarText.csv", combinedData)
+            let csvUrl = await this.gcs.uploadFile("war-screenshots", "outputWarText.csv")
             console.log("**War CSV Updated**")
+            console.log(csvUrl)
+            return csvUrl
         } catch (error) {
             console.log(error)
         }
-
-        console.log(combinedData)
     }
 
 
