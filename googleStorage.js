@@ -36,20 +36,16 @@ export default class {
         }
     }
 
-    async uploadWarFiles() {
-        // Initiates jimp class
-        let jimp = new Jimp()
-
+    async uploadWarFiles(files) {
         // Sets the bucket name
         let bucketName = "war-screenshots"
 
         // Gets the images from Jimp
-        let fileNamesArray = await jimp.createAll()
         let warImgUrls = []
 
         // Loops through the image names provided by Jimp and passes them into the uploadFile function
-        for (let i = 0; i < fileNamesArray.length; i++) {
-            let url = await this.uploadFile(bucketName, fileNamesArray[i])
+        for (let i = 0; i < files.length; i++) {
+            let url = await this.uploadFile(bucketName, files[i])
             warImgUrls.push(url)
         }
 

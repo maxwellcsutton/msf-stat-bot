@@ -5,26 +5,22 @@ import Gcs from "./googleStorage.js"
 
 export default class {
 
-    async getTextWar() {
+    async getTextWar(urls) {
 
         // sets up the credentials
         let creds = fs.readFileSync("./mdtGoogleApiCreds.json")
         let projectId = JSON.parse(creds).project_id
         let keyFilename = "./mdtGoogleApiCreds.json"
 
-        // Creates a client and initializes google storage class
+        // Creates a Vision API client
         let client = new vision.ImageAnnotatorClient({ projectId, keyFilename })
-
-        let gcs = new Gcs()
-
-        let warFileUrls = await gcs.uploadWarFiles()
 
         // Sets the type of annotation you want to perform on the image
         const features = [{ type: "TEXT_DETECTION" }];
 
         // Constructs the image requests to be passed into the batchAnnotate method
         let imageRequestsArr = []
-        warFileUrls.forEach((elem) => {
+        urls.forEach((elem) => {
             let reqObj = {
                 image: {
                     source: {

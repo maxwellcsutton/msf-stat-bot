@@ -13,6 +13,7 @@
 ### TODO
 Primary goals:
 - fix edge cases
+- implement raid stat reading functionality
 
 Discord bot implementation:
     1. make bot read the image
@@ -46,3 +47,4 @@ For readme:
     - "끄" to "11"
     - "扣" to "0"
     - "口" to "0"
+    - "g" to "9"

@@ -9,9 +9,7 @@ export default class {
 
     // Creates the dataSet object from the response of the Vision API call
 
-    async createDataSet() {
-        // calls the Google Vision api
-        let text = await this.gv.getTextWar()
+    async createDataSet(text) {
 
         // the first index of the response from the Google Vision api is a batch string of all text 
         let playerNames = text.warNames.shift()
@@ -40,7 +38,8 @@ export default class {
                 .replace(/끄/g, "11")
                 .replace(/%/g, "2")
                 .replace(/扣/g, "0")
-                .replace(/口/g, ""))
+                .replace(/口/g, "")
+                .replace(/g/g, "9"))
             value = value.filter(Boolean)
             dataSet[key] = value
         }
@@ -48,9 +47,9 @@ export default class {
         return dataSet
     }
 
-    async outputData() {
+    async outputData(text) {
 
-        let dataSet = await this.createDataSet()
+        let dataSet = await this.createDataSet(text)
 
         // combines the data from the different keys of the dataSet object
         // !-- TODO: Figure out a way to do this without hardcoding so it can be re-used --

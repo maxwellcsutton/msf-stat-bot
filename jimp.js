@@ -11,21 +11,29 @@ export default class {
 
     files = []
 
-    // for testing purposes only
-    async getTestImage() {
-        try {
-            const image = await jimp.read("image.png")
-            await image.resize(1080, 1920)
-            await image.write("test.png")
-            console.log("test image written")
-        } catch (err) {
-            console.log(err)
+    // constructs the image
+    async getImage(screenshot) {
+        // checks if an image param is supplied
+        // this allows the app to run on the discord bot
+        if (screenshot) {
+            try {
+                const image = await jimp.read(screenshot)
+                console.log(`using screenshot from url: ${screenshot}`)
+                return image
+            } catch (err) {
+                console.log(err)
+            }
+        } else {
+            // returns the path to the local image if no image parameter is supplied
+            // this allows the app to be run locally
+            return "image.png"
         }
+
     }
 
-    async getWarNames() {
+    async getWarNames(screenshot) {
         try {
-            const image = await jimp.read("image.png")
+            const image = await jimp.read(screenshot)
             let symbolCensor = new jimp(31, 27, "black", (err, censor) => {
                 if (err) throw err;
             });
@@ -47,9 +55,9 @@ export default class {
         }
     }
 
-    async getAttackPoints() {
+    async getWarAttackPoints(screenshot) {
         try {
-            const image = await jimp.read("image.png")
+            const image = await jimp.read(screenshot)
             await image.resize(1080, 1920)
             await image.crop(440, 119, 104, 1657)
             await image.write("warAttackPoints.png")
@@ -60,9 +68,9 @@ export default class {
         }
     }
 
-    async getAttacks() {
+    async getWarAttacks(screenshot) {
         try {
-            const image = await jimp.read("image.png")
+            const image = await jimp.read(screenshot)
             await image.resize(1080, 1920)
             await image.crop(587, 119, 50, 1657)
                 // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
@@ -82,9 +90,9 @@ export default class {
         }
     }
 
-    async getDamage() {
+    async getWarDamage(screenshot) {
         try {
-            const image = await jimp.read("image.png")
+            const image = await jimp.read(screenshot)
             await image.resize(1080, 1920)
             await image.crop(676, 119, 104, 1657)
             await image.write("warDamage.png")
@@ -95,9 +103,9 @@ export default class {
         }
     }
 
-    async getDefensiveWins() {
+    async getWarDefensiveWins(screenshot) {
         try {
-            const image = await jimp.read("image.png")
+            const image = await jimp.read(screenshot)
             await image.resize(1080, 1920)
             await image.crop(830, 119, 50, 1657)
                 // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
@@ -117,9 +125,9 @@ export default class {
         }
     }
 
-    async getDefensiveBoosts() {
+    async getWarDefensiveBoosts(screenshot) {
         try {
-            const image = await jimp.read("image.png")
+            const image = await jimp.read(screenshot)
             await image.resize(1080, 1920)
             await image.crop(940, 119, 50, 1657)
                 // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
@@ -139,6 +147,8 @@ export default class {
         }
     }
 
+    /*
+    // used during testing
     async getNumber() {
         try {
             const image = await jimp.read("image.png")
@@ -151,14 +161,16 @@ export default class {
             console.log(err)
         }
     }
+    */
 
-    async createAll() {
-        await this.getWarNames()
-        await this.getAttackPoints()
-        await this.getAttacks()
-        await this.getDamage()
-        await this.getDefensiveWins()
-        await this.getDefensiveBoosts()
+    async createAll(screenshot) {
+        let image = await this.getImage(screenshot)
+        await this.getWarNames(image)
+        await this.getWarAttackPoints(image)
+        await this.getWarAttacks(image)
+        await this.getWarDamage(image)
+        await this.getWarDefensiveWins(image)
+        await this.getWarDefensiveBoosts(image)
             // await this.getNumber()
         return this.files
     }
