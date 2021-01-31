@@ -35,8 +35,8 @@ export default class {
         try {
             const image = await jimp.read(screenshot)
             let symbolCensor = new jimp(31, 27, "black", (err, censor) => {
-                if (err) throw err;
-            });
+                if (err) throw err
+            })
             await image.resize(1080, 1920)
             await image.crop(154, 119, 282, 1657)
                 // censors the pfp and alliance name so only player names are exposed to the API

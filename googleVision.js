@@ -16,7 +16,7 @@ export default class {
         let client = new vision.ImageAnnotatorClient({ projectId, keyFilename })
 
         // Sets the type of annotation you want to perform on the image
-        const features = [{ type: "TEXT_DETECTION" }];
+        const features = [{ type: "TEXT_DETECTION" }]
 
         // Constructs the image requests to be passed into the batchAnnotate method
         let imageRequestsArr = []
@@ -38,11 +38,11 @@ export default class {
             imageContext: {
                 languageHints: ["en"]
             },
-        };
+        }
 
         // Calls batchAnnotate method on the requests constructed above
         try {
-            const [result] = await client.batchAnnotateImages(request);
+            const [result] = await client.batchAnnotateImages(request)
             let data = result.responses
 
             // Creates an array of the data that is returned from batchAnnotate method

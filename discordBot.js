@@ -1,6 +1,8 @@
 import { Client, MessageAttachment } from "discord.js"
 import App from "./statReader.js"
+import dotenv from "dotenv"
 
+dotenv.config()
 const discord = new Client()
 const app = new App()
 const prefix = "!"
@@ -11,9 +13,9 @@ discord.on("message", async function(message) {
     if (message.author.bot) return
     if (!message.content.startsWith(prefix)) return
 
-    const commandBody = message.content.slice(prefix.length);
-    const args = commandBody.split(' ');
-    const command = args.shift().toLowerCase();
+    const commandBody = message.content.slice(prefix.length)
+    const args = commandBody.split(' ')
+    const command = args.shift().toLowerCase()
 
     if (command === "war") {
         // checks if the message has an attachment
