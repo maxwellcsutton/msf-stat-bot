@@ -21,16 +21,14 @@ discord.on("message", async function(message) {
     const command = args.shift().toLowerCase();
 
     if (command === "war") {
-        //upload the file then pass to jimp function
-        /*
-        TODO:
-        1. make bot read the image
-        2. upload the image to gcs
-        3. download the image
-        4. pass the image into the jimp function
-        5. add image as a param to every function and add if blocks to check if the param exists so it can run locally if its not run by the bot
-        */
-        let upload = message.attachments.array()[0].url
+        // checks if the message has an attachment
+        let msgAttachments = message.attachments.array()[0]
+        if (!msgAttachments) {
+            message.reply("Please add an image to your request.")
+            return
+        }
+        // upload the file then pass to war app
+        let upload = msgAttachments.url
         message.reply(`I'm processing your request.  Please stand by.`)
         let csv = await app.runWarApp(upload)
         let timeTaken = Date.now() - message.createdTimestamp
