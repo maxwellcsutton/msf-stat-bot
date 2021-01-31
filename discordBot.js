@@ -6,7 +6,7 @@ import Auth from "./auth.js"
 dotenv.config()
 const discord = new Client()
 const app = new App()
-const prefix = "!"
+const prefix = "$"
 const auth = new Auth()
 auth.setEnvVars()
 
