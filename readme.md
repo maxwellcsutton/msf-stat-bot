@@ -1,8 +1,13 @@
 ### TO USE
+Local:
 - `npm i`
 - create "./mdtGoogleApiCreds.json" file
 - add a portrait mode war screenshot to the folder titled "image" with format .png
-- node test.js
+- `node test.js`
+
+On Discord:
+- connect the bot to a server
+- use command `!war` with an attached screenshot
 
 
 ## STEPS TO USE UNTIL I MAKE IT PUBLICLY ACCESSIBLE 
