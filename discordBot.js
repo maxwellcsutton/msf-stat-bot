@@ -1,16 +1,11 @@
 import { Client, MessageAttachment } from "discord.js"
-import config from "./config.js"
 import App from "./statReader.js"
 
 const discord = new Client()
 const app = new App()
 const prefix = "!"
 
-if (process.env.BOT_TOKEN) {
-    discord.login(process.env.BOT_TOKEN)
-} else {
-    discord.login(config.BOT_TOKEN)
-}
+discord.login(process.env.BOT_TOKEN)
 
 discord.on("message", async function(message) {
     if (message.author.bot) return
