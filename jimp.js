@@ -8,7 +8,6 @@ export default class {
     size, so they need to be cleaned in order to be passed properly into the Vision API.
     */
 
-
     files = []
 
     // constructs the image
@@ -165,6 +164,7 @@ export default class {
 
     async createAll(screenshot) {
         let image = await this.getImage(screenshot)
+        this.files = []
         await this.getWarNames(image)
         await this.getWarAttackPoints(image)
         await this.getWarAttacks(image)
