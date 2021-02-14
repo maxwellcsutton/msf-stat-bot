@@ -16,10 +16,10 @@ export default class {
         delete text.warNames
 
         // removes all text between two instances of "\n" to delete the Alliance name, then removes the (ME) from the person who took the screenshot
-        playerNames = playerNames.replace(/\n.*?\n/g, "-").replace(/ \(ME\)/g, "")
+        playerNames = playerNames.replace(/\n.*?\n/g, "-%-%-").replace(/ \(ME\)/g, "").replace(/\[ME\)/g, "")
 
         // splitting the names into an array for later use for matching with other data
-        playerNames = playerNames.split("-")
+        playerNames = playerNames.split("-%-%-")
         playerNames = playerNames.filter(Boolean)
 
         playerNames.forEach((elem, index) => {
@@ -39,7 +39,8 @@ export default class {
                 .replace(/%/g, "2")
                 .replace(/扣/g, "0")
                 .replace(/口/g, "")
-                .replace(/g/g, "9"))
+                .replace(/g/g, "9")
+                .replace(/日/g, "8"))
             value = value.filter(Boolean)
             dataSet[key] = value
         }
