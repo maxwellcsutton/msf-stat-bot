@@ -30,22 +30,71 @@ export default class {
 
     }
 
-    async getWarNames(screenshot) {
+    async addHashtags(type, bounds, image) {
+        /*
+        Because the vision API isn't good at recognizing single digits,
+        we need to add a # in front to make it recognize that it's a number.
+        Since various users will have the attacks, defensive wins, and boosts in different locations,
+        we need to create image ratios based off the difference in pixels between a base image and the
+        image that the user inputs
+        */
+        let attacksStart = { x: 588, y: 184 }
+        let defensiveWinsStart = { x: 856, y: 184 }
+        let defensiveBoostsStart = { x: 991, y: 184 }
+        let increment = 88
+
+        let xRatio = 72 / bounds.startNamesBound.x
+        let yRatio = 105 / bounds.startNamesBound.y
+        console.log("x ratio: ", xRatio)
+        console.log("y ratio: ", yRatio)
+
+        let x = 0
+        let y = 0
+
+        if (type === "attacks") {
+            x = bounds.startAttacksBound.x - attacksStart.x * xRatio
+            y = bounds.startAttacksBound.y - attacksStart.y * yRatio
+            increment = increment * yRatio
+        } else if (type === "defensiveWins") {
+            x = bounds.startDefensiveWinsBound.x - defensiveWinsStart.x * xRatio
+            y = bounds.startDefensiveWinsBound.y - defensiveWinsStart.y * yRatio
+            increment = increment * yRatio
+        } else if (type === "defensiveBoosts") {
+            x = bounds.startDefensiveBoostsBound.x - defensiveBoostsStart.x * xRatio
+            y = bounds.startDefensiveBoostsBound.y - defensiveBoostsStart.y * yRatio
+            increment = increment * yRatio
+        } else {
+            return
+        }
+        const font = await jimp.loadFont(jimp.FONT_SANS_32_WHITE)
+        let digitPxArr = [y]
+        let additionalIndexes = 23
+        console.log("adding hashtags:")
+        for (let i = 0; i <= additionalIndexes; i++) {
+            console.log(`# at ${x},${y}`)
+            digitPxArr.push(digitPxArr[i] + increment)
+            console.log(`# at ${x},${digitPxArr[i]}`)
+            await image.print(font, x, digitPxArr[i], "#")
+        }
+        let output = image
+        return output
+    }
+
+    async getWarNames(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
-            let symbolCensor = new jimp(31, 27, "black", (err, censor) => {
-                if (err) throw err
-            })
-            await image.resize(1080, 1920)
-            await image.crop(154, 119, 282, 1657)
-                // censors the pfp and alliance name so only player names are exposed to the API
-                // for some reason, the # of px between names isnt consistent so the array has to be hardcoded
-            let digitPxArr = [34]
-            let additionalIndexes = 23
-            for (let i = 0; i <= additionalIndexes; i++) {
-                digitPxArr.push(digitPxArr[i] + 69.25)
-                await image.composite(symbolCensor, 69, digitPxArr[i])
+            let startX = bounds.startNamesBound.x
+            let startY = bounds.endNamesBound.y
+            let width = bounds.endNamesBound.x - startX
+                // !--TODO: Ask Adam if its better to use this if/else or just set height = image.bitmap.height and have an if with no else
+            let height = 0
+            if (bounds.chatBox) {
+                height = bounds.chatBox.y - startY
+            } else {
+                height = image.bitmap.height - startY
             }
+            console.log(`war names bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
+            await image.crop(startX, startY, width, height)
             await image.write("warNames.png")
             this.files.push("warNames.png")
             console.log("warNames written")
@@ -54,11 +103,20 @@ export default class {
         }
     }
 
-    async getWarAttackPoints(screenshot) {
+    async getWarAttackPoints(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
-            await image.resize(1080, 1920)
-            await image.crop(440, 119, 104, 1657)
+            let startX = bounds.startAttackPointsBound.x
+            let startY = bounds.endAttackPointsBound.y
+            let width = bounds.endAttackPointsBound.x - startX
+            let height = 0
+            if (bounds.chatBox) {
+                height = bounds.chatBox.y - startY
+            } else {
+                height = image.bitmap.height - startY
+            }
+            console.log(`AP bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
+            await image.crop(startX, startY, width, height)
             await image.write("warAttackPoints.png")
             this.files.push("warAttackPoints.png")
             console.log("warAttackPoints written")
@@ -67,21 +125,22 @@ export default class {
         }
     }
 
-    async getWarAttacks(screenshot) {
+    async getWarAttacks(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
-            await image.resize(1080, 1920)
-            await image.crop(587, 119, 50, 1657)
-                // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
-                // starts at 25, every 69 px after
-            const font = await jimp.loadFont(jimp.FONT_SANS_16_WHITE)
-            let digitPxArr = [25]
-            let additionalIndexes = 23
-            for (let i = 0; i <= additionalIndexes; i++) {
-                digitPxArr.push(digitPxArr[i] + 69)
-                await image.print(font, 4, digitPxArr[i], "#")
+            let startX = bounds.startAttacksBound.x
+            let startY = bounds.endAttacksBound.y
+            let width = bounds.endAttacksBound.x - startX
+            let height = 0
+            if (bounds.chatBox) {
+                height = bounds.chatBox.y - startY
+            } else {
+                height = image.bitmap.height - startY
             }
-            await image.write("warAttacks.png")
+            console.log(`atk bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
+            await image.crop(startX, startY, width, height)
+            let newImage = await this.addHashtags("attacks", bounds, image)
+            await newImage.write("warAttacks.png")
             this.files.push("warAttacks.png")
             console.log("warAttacks written")
         } catch (err) {
@@ -89,11 +148,20 @@ export default class {
         }
     }
 
-    async getWarDamage(screenshot) {
+    async getWarDamage(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
-            await image.resize(1080, 1920)
-            await image.crop(676, 119, 104, 1657)
+            let startX = bounds.startDamageBound.x
+            let startY = bounds.endDamageBound.y
+            let width = bounds.endDamageBound.x - startX
+            let height = 0
+            if (bounds.chatBox) {
+                height = bounds.chatBox.y - startY
+            } else {
+                height = image.bitmap.height - startY
+            }
+            console.log(`dmg bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
+            await image.crop(startX, startY, width, height)
             await image.write("warDamage.png")
             this.files.push("warDamage.png")
             console.log("warDamage written")
@@ -102,21 +170,22 @@ export default class {
         }
     }
 
-    async getWarDefensiveWins(screenshot) {
+    async getWarDefensiveWins(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
-            await image.resize(1080, 1920)
-            await image.crop(830, 119, 50, 1657)
-                // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
-                // starts at 25, every 69 px after
-            const font = await jimp.loadFont(jimp.FONT_SANS_16_WHITE)
-            let digitPxArr = [25]
-            let additionalIndexes = 23
-            for (let i = 0; i <= additionalIndexes; i++) {
-                digitPxArr.push(digitPxArr[i] + 69)
-                await image.print(font, 4, digitPxArr[i], "#")
+            let startX = bounds.startDefensiveWinsBound.x
+            let startY = bounds.endDefensiveWinsBound.y
+            let width = bounds.endDefensiveWinsBound.x - startX
+            let height = 0
+            if (bounds.chatBox) {
+                height = bounds.chatBox.y - startY
+            } else {
+                height = image.bitmap.height - startY
             }
-            await image.write("warDefensiveWins.png")
+            console.log(`dw bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
+            await image.crop(startX, startY, width, height)
+            let newImage = await this.addHashtags("defensiveWins", bounds, image)
+            await newImage.write("warDefensiveWins.png")
             this.files.push("warDefensiveWins.png")
             console.log("warDefensiveWins written")
         } catch (err) {
@@ -124,21 +193,22 @@ export default class {
         }
     }
 
-    async getWarDefensiveBoosts(screenshot) {
+    async getWarDefensiveBoosts(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
-            await image.resize(1080, 1920)
-            await image.crop(940, 119, 50, 1657)
-                // because the vision API isn't good at recognizing single digits, we need to add a # in front to make it recognize that it's a number
-                // starts at 25, every 69 px after
-            const font = await jimp.loadFont(jimp.FONT_SANS_16_WHITE)
-            let digitPxArr = [25]
-            let additionalIndexes = 23
-            for (let i = 0; i <= additionalIndexes; i++) {
-                digitPxArr.push(digitPxArr[i] + 69)
-                await image.print(font, 4, digitPxArr[i], "#")
+            let startX = bounds.startDefensiveBoostsBound.x
+            let startY = bounds.endDefensiveBoostsBound.y
+            let width = bounds.endDefensiveBoostsBound.x - startX
+            let height = 0
+            if (bounds.chatBox) {
+                height = bounds.chatBox.y - startY
+            } else {
+                height = image.bitmap.height - startY
             }
-            await image.write("warDefensiveBoosts.png")
+            console.log(`db bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
+            await image.crop(startX, startY, width, height)
+            let newImage = await this.addHashtags("defensiveBoosts", bounds, image)
+            await newImage.write("warDefensiveBoosts.png")
             this.files.push("warDefensiveBoosts.png")
             console.log("warDefensiveBoosts written")
         } catch (err) {
@@ -162,15 +232,15 @@ export default class {
     }
     */
 
-    async createAll(screenshot) {
+    async createAll(screenshot, bounds) {
         let image = await this.getImage(screenshot)
         this.files = []
-        await this.getWarNames(image)
-        await this.getWarAttackPoints(image)
-        await this.getWarAttacks(image)
-        await this.getWarDamage(image)
-        await this.getWarDefensiveWins(image)
-        await this.getWarDefensiveBoosts(image)
+        await this.getWarNames(image, bounds)
+        await this.getWarAttackPoints(image, bounds)
+        await this.getWarAttacks(image, bounds)
+        await this.getWarDamage(image, bounds)
+        await this.getWarDefensiveWins(image, bounds)
+        await this.getWarDefensiveBoosts(image, bounds)
             // await this.getNumber()
         return this.files
     }
