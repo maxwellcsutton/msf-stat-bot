@@ -1,14 +1,16 @@
 import { Client, MessageAttachment } from "discord.js"
 import dotenv from "dotenv"
-import App from "./statReader.js"
 import Auth from "./auth.js"
+import App from "./statReader.js"
 
 dotenv.config()
 const discord = new Client()
-const app = new App()
 const prefix = "$"
 const auth = new Auth()
 auth.setEnvVars()
+const app = new App()
+
+
 
 discord.login(process.env.BOT_TOKEN)
 
