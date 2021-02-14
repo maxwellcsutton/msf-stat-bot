@@ -38,9 +38,9 @@ export default class {
         we need to create image ratios based off the difference in pixels between a base image and the
         image that the user inputs
         */
-        let attacksStart = { x: 570, y: 160 }
-        let defensiveWinsStart = { x: 838, y: 160 }
-        let defensiveBoostsStart = { x: 973, y: 160 }
+        let attacksStart = { startXCrop: 540, numX: 588, startYCrop: 93, numY: 184 }
+        let defensiveWinsStart = { x: 856, y: 184 }
+        let defensiveBoostsStart = { x: 991, y: 184 }
         let increment = 88
 
         let xRatio = 72 / bounds.startNamesBound.x
@@ -48,21 +48,24 @@ export default class {
         console.log("x ratio: ", xRatio)
         console.log("y ratio: ", yRatio)
 
-        let x = 0
-        let y = 0
+        let x
+        let y
 
         if (type === "attacks") {
-            x = attacksStart.x * xRatio - bounds.startAttacksBound.x
-            y = attacksStart.y * yRatio - bounds.startAttacksBound.y
-            increment = increment * yRatio
-        } else if (type === "defensiveWins") {
-            x = defensiveWinsStart.x * xRatio - bounds.startDefensiveWinsBound.x
-            y = defensiveWinsStart.y * yRatio - bounds.startDefensiveWinsBound.y
-            increment = increment * yRatio
-        } else if (type === "defensiveBoosts") {
-            x = defensiveBoostsStart.x * xRatio - bounds.startDefensiveBoostsBound.x
-            y = defensiveBoostsStart.y * yRatio - bounds.startDefensiveBoostsBound.y
-            increment = increment * yRatio
+            x = (attacksStart.numX / xRatio - attacksStart.startXCrop / xRatio) - 18
+            console.log(`x = (${attacksStart.numX} / ${xRatio} - ${attacksStart.startXCrop} / ${xRatio}) - 18`)
+            y = (attacksStart.numY / yRatio - attacksStart.startYCrop / yRatio) - 24
+            console.log(`y = (${attacksStart.numY} / ${yRatio} - ${attacksStart.startYCrop} / ${yRatio}) - 24`)
+            increment = increment / yRatio
+            console.log(x, y, increment)
+                // } else if (type === "defensiveWins") {
+                //     x = (defensiveWinsStart.x / xRatio - bounds.startDefensiveWinsBound.x) - 18
+                //     y = (defensiveWinsStart.y / yRatio - bounds.startDefensiveWinsBound.y) - 24
+                //     increment = increment / yRatio
+                // } else if (type === "defensiveBoosts") {
+                //     x = (defensiveBoostsStart.x / xRatio - bounds.startDefensiveBoostsBound.x) - 18
+                //     y = (defensiveBoostsStart.y / yRatio - bounds.startDefensiveBoostsBound.y) - 24
+                //     increment = increment / yRatio
         } else {
             return
         }
@@ -86,7 +89,7 @@ export default class {
             let startY = bounds.endNamesBound.y
             let width = bounds.endNamesBound.x - startX
                 // !--TODO: Ask Adam if its better to use this if/else or just set height = image.bitmap.height and have an if with no else
-            let height = 0
+            let height
             if (bounds.chatBox) {
                 height = bounds.chatBox.y - startY
             } else {
@@ -108,7 +111,7 @@ export default class {
             let startX = bounds.startAttackPointsBound.x
             let startY = bounds.endAttackPointsBound.y
             let width = bounds.endAttackPointsBound.x - startX
-            let height = 0
+            let height
             if (bounds.chatBox) {
                 height = bounds.chatBox.y - startY
             } else {
@@ -130,7 +133,7 @@ export default class {
             let startX = bounds.startAttacksBound.x
             let startY = bounds.endAttacksBound.y
             let width = bounds.endAttacksBound.x - startX
-            let height = 0
+            let height
             if (bounds.chatBox) {
                 height = bounds.chatBox.y - startY
             } else {
@@ -153,7 +156,7 @@ export default class {
             let startX = bounds.startDamageBound.x
             let startY = bounds.endDamageBound.y
             let width = bounds.endDamageBound.x - startX
-            let height = 0
+            let height
             if (bounds.chatBox) {
                 height = bounds.chatBox.y - startY
             } else {
@@ -175,7 +178,7 @@ export default class {
             let startX = bounds.startDefensiveWinsBound.x
             let startY = bounds.endDefensiveWinsBound.y
             let width = bounds.endDefensiveWinsBound.x - startX
-            let height = 0
+            let height
             if (bounds.chatBox) {
                 height = bounds.chatBox.y - startY
             } else {
@@ -198,7 +201,7 @@ export default class {
             let startX = bounds.startDefensiveBoostsBound.x
             let startY = bounds.endDefensiveBoostsBound.y
             let width = bounds.endDefensiveBoostsBound.x - startX
-            let height = 0
+            let height
             if (bounds.chatBox) {
                 height = bounds.chatBox.y - startY
             } else {
@@ -234,12 +237,12 @@ export default class {
     async createAll(screenshot, bounds) {
         let image = await this.getImage(screenshot)
         this.files = []
-        await this.getWarNames(image, bounds)
-        await this.getWarAttackPoints(image, bounds)
+            // await this.getWarNames(image, bounds)
+            // await this.getWarAttackPoints(image, bounds)
         await this.getWarAttacks(image, bounds)
-        await this.getWarDamage(image, bounds)
-        await this.getWarDefensiveWins(image, bounds)
-        await this.getWarDefensiveBoosts(image, bounds)
+            // await this.getWarDamage(image, bounds)
+            // await this.getWarDefensiveWins(image, bounds)
+            // await this.getWarDefensiveBoosts(image, bounds)
             // await this.getNumber()
         return this.files
     }
