@@ -38,13 +38,13 @@ export default class {
         we need to create image ratios based off the difference in pixels between a base image and the
         image that the user inputs
         */
-        let attacksStart = { x: 588, y: 184 }
-        let defensiveWinsStart = { x: 856, y: 184 }
-        let defensiveBoostsStart = { x: 991, y: 184 }
+        let attacksStart = { x: 570, y: 160 }
+        let defensiveWinsStart = { x: 838, y: 160 }
+        let defensiveBoostsStart = { x: 973, y: 160 }
         let increment = 88
 
         let xRatio = 72 / bounds.startNamesBound.x
-        let yRatio = 105 / bounds.startNamesBound.y
+        let yRatio = 92 / bounds.startNamesBound.y
         console.log("x ratio: ", xRatio)
         console.log("y ratio: ", yRatio)
 
@@ -52,16 +52,16 @@ export default class {
         let y = 0
 
         if (type === "attacks") {
-            x = bounds.startAttacksBound.x - attacksStart.x * xRatio
-            y = bounds.startAttacksBound.y - attacksStart.y * yRatio
+            x = attacksStart.x * xRatio - bounds.startAttacksBound.x
+            y = attacksStart.y * yRatio - bounds.startAttacksBound.y
             increment = increment * yRatio
         } else if (type === "defensiveWins") {
-            x = bounds.startDefensiveWinsBound.x - defensiveWinsStart.x * xRatio
-            y = bounds.startDefensiveWinsBound.y - defensiveWinsStart.y * yRatio
+            x = defensiveWinsStart.x * xRatio - bounds.startDefensiveWinsBound.x
+            y = defensiveWinsStart.y * yRatio - bounds.startDefensiveWinsBound.y
             increment = increment * yRatio
         } else if (type === "defensiveBoosts") {
-            x = bounds.startDefensiveBoostsBound.x - defensiveBoostsStart.x * xRatio
-            y = bounds.startDefensiveBoostsBound.y - defensiveBoostsStart.y * yRatio
+            x = defensiveBoostsStart.x * xRatio - bounds.startDefensiveBoostsBound.x
+            y = defensiveBoostsStart.y * yRatio - bounds.startDefensiveBoostsBound.y
             increment = increment * yRatio
         } else {
             return
@@ -71,7 +71,6 @@ export default class {
         let additionalIndexes = 23
         console.log("adding hashtags:")
         for (let i = 0; i <= additionalIndexes; i++) {
-            console.log(`# at ${x},${y}`)
             digitPxArr.push(digitPxArr[i] + increment)
             console.log(`# at ${x},${digitPxArr[i]}`)
             await image.print(font, x, digitPxArr[i], "#")

@@ -20,12 +20,12 @@ export default class {
         return csv
     }
 
-    // async runTest(screenshot) {
-    //     let image = await this.gcs.uploadFile("war-screenshots", screenshot)
-    //     let bounds = await this.gv.getTextLocations(image)
-    //     let imagesArray = await this.jimp.createAll(screenshot, bounds)
-    //     console.log(bounds)
-    //     return imagesArray
-    // }
+    async runTest(screenshot) {
+        let image = await this.gcs.uploadFile("war-screenshots", screenshot)
+        let bounds = await this.gv.getTextLocations(image)
+        let imagesArray = await this.jimp.createAll(screenshot, bounds)
+        console.log(bounds)
+        return imagesArray
+    }
 
 }
