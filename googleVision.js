@@ -71,109 +71,17 @@ export default class {
         }
     }
 
-    async getTextLocations(image) {
+    // async getTextLocations(image) {
 
-        /*
-            BOUNDS:
-            Names: MY ALLIANCE start -> ATTACK start
-            Attack Points: ATTACK start -> ATTACKS start
-            Attacks: ATTACKS start -> DAMAGE start
-            Damage: DAMAGE start -> VICTORIES start
-            Def W: VICTORIES start -> DEFENSE start
-            Def Bsts: DEFENSE start -> BOOST end
-        */
-
-
-        // Sets the type of annotation you want to perform on the image
-        const features = [{ type: "TEXT_DETECTION" }]
-
-        // Constructs the image requests to be passed into the batchAnnotate method
-        let reqObj = {
-            image: {
-                source: {
-                    imageUri: image,
-                },
-            },
-            features: features,
-        }
-
-        // Adds each image request object to the batch request
-        const request = {
-            requests: reqObj,
-            imageContext: {
-                languageHints: ["en"]
-            },
-        }
-
-        // Performs text detection on the image passed in
-        const [result] = await this.client.batchAnnotateImages(request)
-        const detections = result.responses[0].textAnnotations
-        fs.writeFileSync("textAnnotations.json", JSON.stringify(detections))
-        let bounds = new Object()
-        bounds.startNamesBound = null
-        bounds.endNamesBound = null
-        bounds.startAttackPointsBound = null
-        bounds.endAttackPointsBound = null
-        bounds.startAttacksBound = null
-        bounds.endAttacksBound = null
-        bounds.startDamageBound = null
-        bounds.endDamageBound = null
-        bounds.startDefensiveWinsBound = null
-        bounds.endDefensiveWinsBound = null
-        bounds.startDefensiveBoostsBound = null
-        bounds.endDefensiveBoostsBound = null
-        bounds.chatBox = null
-
-        detections.forEach((elem, index) => {
-            let text = elem.description
-            let startBound = elem.boundingPoly.vertices[0]
-            let endBound = elem.boundingPoly.vertices[2]
-            if (text === "MYALLIANCE" || text === "MY" && detections[index + 1].description === "ALLIANCE") {
-                bounds.startNamesBound = startBound
-            }
-            if (text === "ATTACK") {
-                bounds.endNamesBound = { x: startBound.x, y: endBound.y + 2 }
-                bounds.startAttackPointsBound = startBound
-            }
-            if (text === "ATTACKS") {
-                bounds.endAttackPointsBound = { x: startBound.x, y: endBound.y + 2 }
-                bounds.startAttacksBound = startBound
-            }
-            if (text === "DAMAGE") {
-                bounds.endAttacksBound = { x: startBound.x, y: endBound.y + 2 }
-                bounds.startDamageBound = startBound
-            }
-            if (text === "DEFEND") {
-                bounds.endDamageBound = { x: startBound.x, y: endBound.y + 2 }
-                bounds.startDefensiveWinsBound = startBound
-            }
-            if (text === "DEFENSE") {
-                bounds.endDefensiveWinsBound = { x: startBound.x, y: endBound.y + 2 }
-                bounds.startDefensiveBoostsBound = startBound
-            }
-            if (text === "BOOST") {
-                bounds.endDefensiveBoostsBound = endBound
-            }
-            if (text === "»") {
-                bounds.chatBox = { x: startBound.x, y: startBound.y - 2 }
-            }
-        })
-        return bounds
-
-    }
-
-
-    //     async getTextLocations(image) {
-
-    //         /*
-    //             BOUNDS:
-    //             Names: MY ALLIANCE start -> ATTACK start
-    //             Attack Points: ATTACK start -> ATTACKS start
-    //             Attacks: ATTACKS start -> DAMAGE start
-    //             Damage: DAMAGE start -> VICTORIES start
-    //             Def W: VICTORIES start -> DEFENSE start
-    //             Def Bsts: DEFENSE start -> BOOST end
-    //         */
+    //     /*
+    //         BOUNDS:
+    //         Names: MY ALLIANCE start -> ATTACK start
+    //         Attack Points: ATTACK start -> ATTACKS start
+    //         Attacks: ATTACKS start -> DAMAGE start
+    //         Damage: DAMAGE start -> VICTORIES start
+    //         Def W: VICTORIES start -> DEFENSE start
+    //         Def Bsts: DEFENSE start -> BOOST end
+    //     */
 
 
     //     // Sets the type of annotation you want to perform on the image
@@ -253,4 +161,101 @@ export default class {
     //     return bounds
 
     // }
+
+
+    async getTextLocations(image) {
+        try {
+            /*
+                        BOUNDS:
+                        Names: MY ALLIANCE start -> ATTACK start
+                        Attack Points: ATTACK start -> ATTACKS start
+                        Attacks: ATTACKS start -> DAMAGE start
+                        Damage: DAMAGE start -> VICTORIES start
+                        Def W: VICTORIES start -> DEFENSE start
+                        Def Bsts: DEFENSE start -> BOOST end
+                    */
+
+
+            // Sets the type of annotation you want to perform on the image
+            const features = [{ type: "TEXT_DETECTION" }]
+
+            // Constructs the image requests to be passed into the batchAnnotate method
+            let reqObj = [{
+                image: {
+                    source: {
+                        imageUri: image,
+                    },
+                },
+                features: features,
+            }]
+
+            // Adds each image request object to the batch request
+            const request = {
+                requests: reqObj,
+                imageContext: {
+                    languageHints: ["en"]
+                },
+            }
+
+            // Performs text detection on the image passed in
+            const [result] = await this.client.batchAnnotateImages(request)
+            const detections = result.responses[0].textAnnotations
+            fs.writeFileSync("textAnnotations.json", JSON.stringify(detections))
+            let bounds = new Object()
+            bounds.startNamesBound = null
+            bounds.endNamesBound = null
+            bounds.startAttackPointsBound = null
+            bounds.endAttackPointsBound = null
+            bounds.startAttacksBound = null
+            bounds.endAttacksBound = null
+            bounds.startDamageBound = null
+            bounds.endDamageBound = null
+            bounds.startDefensiveWinsBound = null
+            bounds.endDefensiveWinsBound = null
+            bounds.startDefensiveBoostsBound = null
+            bounds.endDefensiveBoostsBound = null
+            bounds.chatBox = null
+
+            detections.forEach((elem, index) => {
+                let text = elem.description
+                let startBound = elem.boundingPoly.vertices[0]
+                let endBound = elem.boundingPoly.vertices[2]
+                if (text === "MYALLIANCE" || text === "MY" && detections[index + 1].description === "ALLIANCE") {
+                    bounds.startNamesBound = startBound
+                }
+                if (text === "ATTACK") {
+                    bounds.endNamesBound = { x: startBound.x, y: endBound.y + 2 }
+                    bounds.startAttackPointsBound = startBound
+                }
+                if (text === "ATTACKS") {
+                    bounds.endAttackPointsBound = { x: startBound.x, y: endBound.y + 2 }
+                    bounds.startAttacksBound = startBound
+                }
+                if (text === "DAMAGE") {
+                    bounds.endAttacksBound = { x: startBound.x, y: endBound.y + 2 }
+                    bounds.startDamageBound = startBound
+                }
+                if (text === "DEFEND") {
+                    bounds.endDamageBound = { x: startBound.x, y: endBound.y + 2 }
+                    bounds.startDefensiveWinsBound = startBound
+                }
+                if (text === "DEFENSE") {
+                    bounds.endDefensiveWinsBound = { x: startBound.x, y: endBound.y + 2 }
+                    bounds.startDefensiveBoostsBound = startBound
+                }
+                if (text === "BOOST") {
+                    bounds.endDefensiveBoostsBound = endBound
+                }
+                if (text === "»") {
+                    bounds.chatBox = { x: startBound.x, y: startBound.y - 2 }
+                }
+            })
+            return bounds
+        } catch (err) {
+            console.log(err)
+        }
+
+
+
+    }
 }

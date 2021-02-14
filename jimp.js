@@ -235,16 +235,20 @@ export default class {
     */
 
     async createAll(screenshot, bounds) {
-        let image = await this.getImage(screenshot)
-        this.files = []
-        await this.getWarNames(image, bounds)
-        await this.getWarAttackPoints(image, bounds)
-        await this.getWarAttacks(image, bounds)
-        await this.getWarDamage(image, bounds)
-        await this.getWarDefensiveWins(image, bounds)
-        await this.getWarDefensiveBoosts(image, bounds)
-            // await this.getNumber()
-        return this.files
+        try {
+            this.files = []
+            let image = await this.getImage(screenshot)
+            await this.getWarNames(image, bounds)
+            await this.getWarAttackPoints(image, bounds)
+            await this.getWarAttacks(image, bounds)
+            await this.getWarDamage(image, bounds)
+            await this.getWarDefensiveWins(image, bounds)
+            await this.getWarDefensiveBoosts(image, bounds)
+                // await this.getNumber()
+            return this.files
+        } catch (err) {
+            console.log(err)
+        }
     }
 
 }

@@ -11,9 +11,9 @@ export default class {
     output = new Output()
 
     async runWarApp(screenshot) {
-        let image = await this.gcs.uploadFile("war-screenshots", screenshot)
-        let bounds = await this.gv.getTextLocations(image)
-        let imagesArray = await this.jimp.createAll(image, bounds)
+        // let image = await this.gcs.uploadFile("war-screenshots", screenshot)
+        let bounds = await this.gv.getTextLocations(screenshot)
+        let imagesArray = await this.jimp.createAll(screenshot, bounds)
         let warFiles = await this.gcs.uploadWarFiles(imagesArray)
         let textAnnotations = await this.gv.getTextWar(warFiles)
         let csv = await this.output.outputData(textAnnotations)
