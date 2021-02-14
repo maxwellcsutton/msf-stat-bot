@@ -38,9 +38,9 @@ export default class {
         we need to create image ratios based off the difference in pixels between a base image and the
         image that the user inputs
         */
-        let attacksStart = { startXCrop: 540, numX: 588, startYCrop: 93, numY: 184 }
-        let defensiveWinsStart = { x: 856, y: 184 }
-        let defensiveBoostsStart = { x: 991, y: 184 }
+        let attacksStart = { startXCrop: 540, numX: 588, startYCrop: 106, numY: 184 }
+        let defensiveWinsStart = { startXCrop: 809, numX: 856, startYCrop: 105, numY: 184 }
+        let defensiveBoostsStart = { startXCrop: 942, numX: 991, startYCrop: 103, numY: 184 }
         let increment = 88
 
         let xRatio = 72 / bounds.startNamesBound.x
@@ -52,20 +52,20 @@ export default class {
         let y
 
         if (type === "attacks") {
-            x = (attacksStart.numX / xRatio - attacksStart.startXCrop / xRatio) - 18
-            console.log(`x = (${attacksStart.numX} / ${xRatio} - ${attacksStart.startXCrop} / ${xRatio}) - 18`)
-            y = (attacksStart.numY / yRatio - attacksStart.startYCrop / yRatio) - 24
-            console.log(`y = (${attacksStart.numY} / ${yRatio} - ${attacksStart.startYCrop} / ${yRatio}) - 24`)
+            x = (attacksStart.numX / xRatio - attacksStart.startXCrop / xRatio) - 22
+            console.log(`x = (${attacksStart.numX} / ${xRatio} - ${attacksStart.startXCrop} / ${xRatio}) - 22`)
+            y = (attacksStart.numY / yRatio - attacksStart.startYCrop / yRatio) - 4
+            console.log(`y = (${attacksStart.numY} / ${yRatio} - ${attacksStart.startYCrop} / ${yRatio})`)
             increment = increment / yRatio
             console.log(x, y, increment)
-                // } else if (type === "defensiveWins") {
-                //     x = (defensiveWinsStart.x / xRatio - bounds.startDefensiveWinsBound.x) - 18
-                //     y = (defensiveWinsStart.y / yRatio - bounds.startDefensiveWinsBound.y) - 24
-                //     increment = increment / yRatio
-                // } else if (type === "defensiveBoosts") {
-                //     x = (defensiveBoostsStart.x / xRatio - bounds.startDefensiveBoostsBound.x) - 18
-                //     y = (defensiveBoostsStart.y / yRatio - bounds.startDefensiveBoostsBound.y) - 24
-                //     increment = increment / yRatio
+        } else if (type === "defensiveWins") {
+            x = (defensiveWinsStart.numX / xRatio - defensiveWinsStart.startXCrop / xRatio) - 22
+            y = (defensiveWinsStart.numY / yRatio - defensiveWinsStart.startYCrop / yRatio) - 4
+            increment = increment / yRatio
+        } else if (type === "defensiveBoosts") {
+            x = (defensiveBoostsStart.numX / xRatio - defensiveBoostsStart.startXCrop / xRatio) - 22
+            y = (defensiveBoostsStart.numY / yRatio - defensiveBoostsStart.startYCrop / yRatio) - 4
+            increment = increment / yRatio
         } else {
             return
         }
@@ -75,7 +75,7 @@ export default class {
         console.log("adding hashtags:")
         for (let i = 0; i <= additionalIndexes; i++) {
             digitPxArr.push(digitPxArr[i] + increment)
-            console.log(`# at ${x},${digitPxArr[i]}`)
+                //console.log(`# at ${x},${digitPxArr[i]}`)
             await image.print(font, x, digitPxArr[i], "#")
         }
         let output = image
@@ -87,16 +87,15 @@ export default class {
             const image = await jimp.read(screenshot)
             let startX = bounds.startNamesBound.x
             let startY = bounds.endNamesBound.y
-            let width = bounds.endNamesBound.x - startX
-                // !--TODO: Ask Adam if its better to use this if/else or just set height = image.bitmap.height and have an if with no else
-            let height
+            let w = bounds.endNamesBound.x - startX
+            let h
             if (bounds.chatBox) {
-                height = bounds.chatBox.y - startY
+                h = bounds.chatBox.y - startY
             } else {
-                height = image.bitmap.height - startY
+                h = image.bitmap.height - startY - 75
             }
-            console.log(`war names bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
-            await image.crop(startX, startY, width, height)
+            console.log(`war names bounds: x ${startX}, y: ${startY}, w: ${w}, h: ${h}`)
+            await image.crop(startX, startY, w, h)
             await image.write("warNames.png")
             this.files.push("warNames.png")
             console.log("warNames written")
@@ -110,15 +109,15 @@ export default class {
             const image = await jimp.read(screenshot)
             let startX = bounds.startAttackPointsBound.x
             let startY = bounds.endAttackPointsBound.y
-            let width = bounds.endAttackPointsBound.x - startX
-            let height
+            let w = bounds.endAttackPointsBound.x - startX
+            let h
             if (bounds.chatBox) {
-                height = bounds.chatBox.y - startY
+                h = bounds.chatBox.y - startY
             } else {
-                height = image.bitmap.height - startY
+                h = image.bitmap.height - startY - 75
             }
-            console.log(`AP bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
-            await image.crop(startX, startY, width, height)
+            console.log(`AP bounds: x ${startX}, y: ${startY}, w: ${w}, h: ${h}`)
+            await image.crop(startX, startY, w, h)
             await image.write("warAttackPoints.png")
             this.files.push("warAttackPoints.png")
             console.log("warAttackPoints written")
@@ -130,17 +129,18 @@ export default class {
     async getWarAttacks(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
+            console.log("precrop h: ", image.bitmap.height)
             let startX = bounds.startAttacksBound.x
             let startY = bounds.endAttacksBound.y
-            let width = bounds.endAttacksBound.x - startX
-            let height
+            let w = bounds.endAttacksBound.x - startX
+            let h
             if (bounds.chatBox) {
-                height = bounds.chatBox.y - startY
+                h = bounds.chatBox.y - startY
             } else {
-                height = image.bitmap.height - startY
+                h = image.bitmap.height - startY - 75
             }
-            console.log(`atk bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
-            await image.crop(startX, startY, width, height)
+            console.log(`atk bounds: x ${startX}, y: ${startY}, w: ${w}, h: ${h}`)
+            await image.crop(startX, startY, w, h)
             let newImage = await this.addHashtags("attacks", bounds, image)
             await newImage.write("warAttacks.png")
             this.files.push("warAttacks.png")
@@ -155,15 +155,15 @@ export default class {
             const image = await jimp.read(screenshot)
             let startX = bounds.startDamageBound.x
             let startY = bounds.endDamageBound.y
-            let width = bounds.endDamageBound.x - startX
-            let height
+            let w = bounds.endDamageBound.x - startX
+            let h
             if (bounds.chatBox) {
-                height = bounds.chatBox.y - startY
+                h = bounds.chatBox.y - startY
             } else {
-                height = image.bitmap.height - startY
+                h = image.bitmap.height - startY - 75
             }
-            console.log(`dmg bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
-            await image.crop(startX, startY, width, height)
+            console.log(`dmg bounds: x ${startX}, y: ${startY}, w: ${w}, h: ${h}`)
+            await image.crop(startX, startY, w, h)
             await image.write("warDamage.png")
             this.files.push("warDamage.png")
             console.log("warDamage written")
@@ -177,15 +177,15 @@ export default class {
             const image = await jimp.read(screenshot)
             let startX = bounds.startDefensiveWinsBound.x
             let startY = bounds.endDefensiveWinsBound.y
-            let width = bounds.endDefensiveWinsBound.x - startX
-            let height
+            let w = bounds.endDefensiveWinsBound.x - startX
+            let h
             if (bounds.chatBox) {
-                height = bounds.chatBox.y - startY
+                h = bounds.chatBox.y - startY
             } else {
-                height = image.bitmap.height - startY
+                h = image.bitmap.height - startY - 75
             }
-            console.log(`dw bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
-            await image.crop(startX, startY, width, height)
+            console.log(`dw bounds: x ${startX}, y: ${startY}, w: ${w}, h: ${h}`)
+            await image.crop(startX, startY, w, h)
             let newImage = await this.addHashtags("defensiveWins", bounds, image)
             await newImage.write("warDefensiveWins.png")
             this.files.push("warDefensiveWins.png")
@@ -200,15 +200,15 @@ export default class {
             const image = await jimp.read(screenshot)
             let startX = bounds.startDefensiveBoostsBound.x
             let startY = bounds.endDefensiveBoostsBound.y
-            let width = bounds.endDefensiveBoostsBound.x - startX
-            let height
+            let w = bounds.endDefensiveBoostsBound.x - startX
+            let h
             if (bounds.chatBox) {
-                height = bounds.chatBox.y - startY
+                h = bounds.chatBox.y - startY
             } else {
-                height = image.bitmap.height - startY
+                h = image.bitmap.height - startY - 75
             }
-            console.log(`db bounds: x ${startX}, y: ${startY}, w: ${width}, h: ${height}`)
-            await image.crop(startX, startY, width, height)
+            console.log(`db bounds: x ${startX}, y: ${startY}, w: ${w}, h: ${h}`)
+            await image.crop(startX, startY, w, h)
             let newImage = await this.addHashtags("defensiveBoosts", bounds, image)
             await newImage.write("warDefensiveBoosts.png")
             this.files.push("warDefensiveBoosts.png")
@@ -237,12 +237,12 @@ export default class {
     async createAll(screenshot, bounds) {
         let image = await this.getImage(screenshot)
         this.files = []
-            // await this.getWarNames(image, bounds)
-            // await this.getWarAttackPoints(image, bounds)
+        await this.getWarNames(image, bounds)
+        await this.getWarAttackPoints(image, bounds)
         await this.getWarAttacks(image, bounds)
-            // await this.getWarDamage(image, bounds)
-            // await this.getWarDefensiveWins(image, bounds)
-            // await this.getWarDefensiveBoosts(image, bounds)
+        await this.getWarDamage(image, bounds)
+        await this.getWarDefensiveWins(image, bounds)
+        await this.getWarDefensiveBoosts(image, bounds)
             // await this.getNumber()
         return this.files
     }

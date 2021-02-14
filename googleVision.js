@@ -86,6 +86,7 @@ export default class {
         // Performs text detection on the image passed in
         const [result] = await this.client.textDetection(image);
         const detections = result.textAnnotations
+        fs.writeFileSync("textAnnotations.json", JSON.stringify(detections))
         let bounds = new Object()
         bounds.startNamesBound = null
         bounds.endNamesBound = null

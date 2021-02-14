@@ -4,4 +4,4 @@ const app = new App()
 
 // app.runWarApp("image.png")
 
-app.runTest("image.png")
+app.runWarApp("image.png")
