@@ -85,6 +85,7 @@ export default class {
     async getWarNames(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
+                // creates dynamic x, y, width, and height values based on the locations of the relevant data
             let startX = bounds.startNamesBound.x
             let startY = bounds.endNamesBound.y
             let w = bounds.endNamesBound.x - startX
@@ -107,6 +108,7 @@ export default class {
     async getWarAttackPoints(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
+                // creates dynamic x, y, width, and height values based on the locations of the relevant data
             let startX = bounds.startAttackPointsBound.x
             let startY = bounds.endAttackPointsBound.y
             let w = bounds.endAttackPointsBound.x - startX
@@ -129,7 +131,7 @@ export default class {
     async getWarAttacks(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
-            console.log("precrop h: ", image.bitmap.height)
+                // creates dynamic x, y, width, and height values based on the locations of the relevant data
             let startX = bounds.startAttacksBound.x
             let startY = bounds.endAttacksBound.y
             let w = bounds.endAttacksBound.x - startX
@@ -153,6 +155,7 @@ export default class {
     async getWarDamage(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
+                // creates dynamic x, y, width, and height values based on the locations of the relevant data
             let startX = bounds.startDamageBound.x
             let startY = bounds.endDamageBound.y
             let w = bounds.endDamageBound.x - startX
@@ -175,6 +178,7 @@ export default class {
     async getWarDefensiveWins(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
+                // creates dynamic x, y, width, and height values based on the locations of the relevant data
             let startX = bounds.startDefensiveWinsBound.x
             let startY = bounds.endDefensiveWinsBound.y
             let w = bounds.endDefensiveWinsBound.x - startX
@@ -198,6 +202,7 @@ export default class {
     async getWarDefensiveBoosts(screenshot, bounds) {
         try {
             const image = await jimp.read(screenshot)
+                // creates dynamic x, y, width, and height values based on the locations of the relevant data
             let startX = bounds.startDefensiveBoostsBound.x
             let startY = bounds.endDefensiveBoostsBound.y
             let w = bounds.endDefensiveBoostsBound.x - startX
