@@ -1,9 +1,4 @@
 node_modules
 *.json
-*.png
-*.jpg
-*.jpeg
-*.txt
-*.csv
 config.js
 .env
