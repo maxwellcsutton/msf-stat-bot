@@ -7,7 +7,7 @@
     3. Download the auth json
     4. Add it to the config folder renamed "./mdtGoogleApiCreds.json"
 3. Add a portrait mode war screenshot to the folder titled "image" with format .png
-4. `node localRunner.js`
+4. `npm start`
 
 ##### On Discord:
 - Use command `$war` with an attached screenshot

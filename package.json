@@ -4,7 +4,7 @@
     "description": "",
     "main": "damageScript.js",
     "scripts": {
-        "start": "node ./src/localRunner.js"
+        "start": "cd ./src && node localRunner.js"
     },
     "type": "module",
     "author": "",
