@@ -1,4 +1,8 @@
 node_modules
-*.json
-config.js
 .env
+/config/*.json
+/src/*.png
+/src/*.jpeg
+/src/*.jpg
+/src/*.txt
+/src/*.json
