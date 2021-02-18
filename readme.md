@@ -69,13 +69,13 @@ This discord bot takes a user-submitted image of the war results screen from the
 
 2. Create an auth file:
 
-1. Create a Google Cloud Services project
+    1. Create a Google Cloud Services project
 
-2. Scope Vision API and Google Cloud Storage to your project
+    2. Scope Vision API and Google Cloud Storage to your project
 
-3. Download the auth json
+    3. Download the auth json
 
-4. Add it to the config folder renamed "./mdtGoogleApiCreds.json"
+    4. Add it to the config folder renamed "./mdtGoogleApiCreds.json"
 
 3. Add a portrait mode war screenshot to the folder titled "image" with format .png
 
