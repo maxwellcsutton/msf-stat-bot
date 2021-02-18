@@ -107,7 +107,7 @@ This discord bot takes a user-submitted image of the war results screen from the
 
 ## HARDCODED REGEX
 
-- For mistakes that are consistent by the OCR, I've added some regex to make replacements. The list is included below:
+For mistakes that are consistent by the OCR, I've added some regex to make replacements. The list is included below:
 
 - "%" to "2"
 
