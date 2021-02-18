@@ -5,14 +5,15 @@ This discord bot takes a user-submitted image of the war results screen from the
 ### Example
 
 ##### Input
-![Input](/samples/image.png)
+![](/samples/image.png)
 
 ##### Output
-![Input](/samples/output.png)
+![](/samples/output.png)
 
 ### Code Overview
 
 #### Basic Flow
+
 ##### CSV Output
 1. Images are passed into the Google Vision API using the `getTextLocations()` method to determine the bounds of the member statistics table. - `./src/googleVision.js`
 2. The bounds are passed along with the image to the `createAll()` method for image manipulation using JIMP.  In order to create a consistent dataset, the image needs to be split by column before being passed again to the Vision API for text annotation (see `./samples` for sample images after they are split by column). In addition, the Google Vision API is optimized for dense text detection, so it often filters out single characters as noise.  To get around this, the `addHashtags()` method adds `#` in front of each single number to increase the success rate of the Vision API.  Because different phone screens have different resolutions, thus have the numbers in slightly different locations, the bounds from `getTextLocations()` are compared to a default image to create a distance ratio for the placement of the `#`s.  - `./src/jimp/js`
