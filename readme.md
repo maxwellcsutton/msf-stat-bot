@@ -50,11 +50,11 @@ This discord bot takes a user-submitted image of the war results screen from the
 
 2. The discord bot checks every message sent in any supported channels for the command `$war`.
 
-- If an image it attached, it attempts to pass it into the CSV Output flow and returns a CSV as well as the time the process took to complete.
+    - If an image it attached, it attempts to pass it into the CSV Output flow and returns a CSV as well as the time the process took to complete.
 
-- If no image is supplied, the user is displayed an error, reminding them to add an image.
+    - If no image is supplied, the user is displayed an error, reminding them to add an image.
 
-- If any errors occur during the attempt to create an output, the user is displayed a general error.
+    - If any errors occur during the attempt to create an output, the user is displayed a general error.
 
   
   
