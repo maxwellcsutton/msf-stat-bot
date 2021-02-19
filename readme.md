@@ -2,7 +2,7 @@
 
 ## Description
 
-This discord bot takes a user-submitted image of the war results screen from the game Marvel Strike Force and outputs a CSV with the alliance member names and statistics for the purposes of tracking attacks, damage, and defensive wins. I'm the leader of one of the top 100 alliances in the game and I wanted to keep track of my member's statistics, but typing them out became tedious. Once I got a stable working version for myself running locally, I added the discord bot functionality and hosted it on Heroku. This project is currently in beta while I work on increasing the amount of supported phones/resolutions. If you would like to have the bot added to your discord and participate in the beta testing, please message me at InfernalCrackLED#4479.
+The discord bot takes a user-submitted image of the war results screen from the mobile game Marvel Strike Force and outputs a CSV file with the alliance member names and statistics for the purposes of tracking attacks, damage, and defensive wins.  I am leading one of the top 100 alliances in the game and I needed to streamline the process of tracking our statistics.  Once I developed a stable working version on a local machine, I added the discord bot functionality and hosted it on Heroku.  The project is currently in the beta stage while I expand support on different phones and resolutions.  If you would like to have the bot added to your discord and participate in the beta testing, please message me at InfernalCrackLED#4479.
 
   
 
