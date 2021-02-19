@@ -4,6 +4,6 @@ import dotenv from "dotenv"
 export default class {
     async setEnvVars() {
         dotenv.config()
-        fs.writeFileSync("./mdtGoogleApiCreds.json", process.env.CREDS)
+        fs.writeFileSync("../config/mdtGoogleApiCreds.json", process.env.CREDS)
     }
 }

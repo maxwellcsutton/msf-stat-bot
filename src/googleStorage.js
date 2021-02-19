@@ -7,9 +7,9 @@ export default class {
     async uploadFile(bucketName, fileName) {
 
         // sets up the credentials
-        let creds = fs.readFileSync("./mdtGoogleApiCreds.json")
+        let creds = fs.readFileSync("../config/mdtGoogleApiCreds.json")
         let projectId = JSON.parse(creds).project_id
-        let keyFilename = "./mdtGoogleApiCreds.json"
+        let keyFilename = "../config/mdtGoogleApiCreds.json"
 
         // Creates a client
         let storage = new Storage({ projectId, keyFilename });

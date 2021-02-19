@@ -6,9 +6,9 @@ import Gcs from "./googleStorage.js"
 export default class {
 
     // sets up the credentials
-    creds = fs.readFileSync("./mdtGoogleApiCreds.json")
+    creds = fs.readFileSync("../config/mdtGoogleApiCreds.json")
     projectId = JSON.parse(this.creds).project_id
-    keyFilename = "./mdtGoogleApiCreds.json"
+    keyFilename = "../config/mdtGoogleApiCreds.json"
 
     // Creates a Vision API client
     client = new vision.ImageAnnotatorClient({ projectId: this.projectId, keyFilename: this.keyFilename })
@@ -160,6 +160,7 @@ export default class {
                     bounds.chatBox = { x: startBound.x, y: startBound.y - 2 }
                 }
             })
+            console.log(bounds)
             return bounds
         } catch (err) {
             console.log(err)
