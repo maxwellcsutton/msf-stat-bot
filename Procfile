@@ -1,1 +1,1 @@
-worker: node discordBot.js
+worker: npm run startBot
