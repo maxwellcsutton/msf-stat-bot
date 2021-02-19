@@ -67,7 +67,7 @@ export default class {
         // prints the data to csv
         try {
             fs.writeFileSync("../output/outputWarText.csv", combinedData)
-            let csvUrl = await this.gcs.uploadFile("war-screenshots", "outputWarText.csv")
+            let csvUrl = await this.gcs.uploadFile("war-screenshots", "../output/outputWarText.csv")
             console.log("**War CSV Updated**")
             console.log(csvUrl)
             return csvUrl
