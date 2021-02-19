@@ -4,7 +4,8 @@
     "description": "",
     "main": "damageScript.js",
     "scripts": {
-        "start": "cd ./src && node localRunner.js"
+        "start": "cd ./src && node localRunner.js",
+        "startBot": "cd ./src && node discordBot.js"
     },
     "type": "module",
     "author": "",

@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 import Auth from "./auth.js"
 import App from "./statReader.js"
 
-dotenv.config()
+dotenv.config({ path: '../.env' })
 const discord = new Client()
 const prefix = "$"
 const auth = new Auth()
